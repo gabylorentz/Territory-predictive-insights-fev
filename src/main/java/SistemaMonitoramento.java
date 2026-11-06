@@ -1,17 +1,27 @@
-import dominio.Medicao;
+import dominio.*;
 import excecao.DadosInvalidosException;
-import java.time.LocalDateTime;
+import excecao.FonteIndisponivelException;
+import java.util.List;
 
 public class SistemaMonitoramento {
     public static void main(String[] args) {
-        try {
-            Medicao ok = new Medicao(null, "Chuva", 42.5, "mm/h", LocalDateTime.now());
-            System.out.println(ok);
+        List<Sensor> sensores = List.of(
+                new SensorChuva(),
+                new SensorNivelCorrego(),
+                new SensorUmidadeSolo()
+        );
 
-            Medicao ruim = new Medicao(null, "Chuva", -5, "mm/h", LocalDateTime.now());
-            System.out.println(ruim);
-        } catch (DadosInvalidosException e) {
-            System.out.println("Erro: " + e.getMessage());
+        for (int rodada = 1; rodada <= 3; rodada++) {
+            System.out.println("--- Rodada " + rodada + " ---");
+            for (Sensor sensor : sensores) {
+                try {
+                    System.out.println(sensor.ler());
+                } catch (DadosInvalidosException e) {
+                    System.out.println("⚠ Dado inválido: " + e.getMessage());
+                } catch (FonteIndisponivelException e) {
+                    System.out.println("✖ Sensor indisponível: " + e.getMessage());
+                }
+            }
         }
     }
 }

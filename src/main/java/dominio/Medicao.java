@@ -1,7 +1,9 @@
 package dominio;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import excecao.DadosInvalidosException;
+
 
 public class Medicao {
     private Long id;
@@ -55,9 +57,10 @@ public class Medicao {
         return dataHora;
     }
 
+    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     //Todo 5: Implementar o método toString() para exibir as informações da medição
    @Override
     public String toString() {
-    return "[" + dataHora + "] " + tipoSensor + ": " + valor + " " + unidade;
+    return "[" + dataHora.format(FORMATO) + "] " + tipoSensor + ": " + valor + " " + unidade;
     }
 }
