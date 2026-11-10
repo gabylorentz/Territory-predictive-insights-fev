@@ -8,4 +8,6 @@ C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\domin
 C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\dominio\SensorUmidadeSolo.java
 C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\excecao\DadosInvalidosException.java
 C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\excecao\FonteIndisponivelException.java
+C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\persistencia\ConexaoBanco.java
+C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\persistencia\MedicaoDAO.java
 C:\Users\LoGa564\Downloads\territory-predictive-insights-fev\src\main\java\SistemaMonitoramento.java
