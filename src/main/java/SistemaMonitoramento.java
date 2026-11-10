@@ -47,5 +47,27 @@ public class SistemaMonitoramento {
         } catch (SQLException | DadosInvalidosException e) {
             System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());
         }
-    }
-}
+                // ===== ETAPA 5: previsões =====
+        System.out.println("--- Previsões para Chuva ---");
+        List<EstrategiaPrevisao> estrategias = List.of(
+                new PrevisaoMediaMovel(5),
+                new PrevisaoComparacao(3)
+        );
+
+        try {
+            List<Medicao> historico = medicaoDAO.listarPorSensor("Chuva");
+            System.out.println("Leituras no histórico: " + historico.size());
+
+            for (EstrategiaPrevisao estrategia : estrategias) {
+                try {
+                    double previsto = estrategia.prever(historico);
+                    System.out.println("[" + estrategia.getNome() + "] " + estrategia.explicar(previsto, "mm/h"));
+                } catch (DadosInvalidosException e) {
+                    System.out.println("[SILÊNCIO] " + e.getMessage());
+                }
+            }
+        } catch (SQLException | DadosInvalidosException e) {
+
+            System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());}
+            }
+        }
