@@ -20,10 +20,15 @@ public class SensorChuva implements Sensor {
     }
 
     @Override
+    public boolean estaFuncionando() {
+        return random.nextInt(10) != 0; // 90% de chance de estar funcionando
+    }
+    
+    @Override
     public Medicao ler() throws DadosInvalidosException, FonteIndisponivelException {
         // 10% de chance de o sensor falhar
-        if (random.nextInt(10) == 0){
-            throw new FonteIndisponivelException("Sensor de " + getTipo() + " não respondeu.");
+        if (!estaFuncionando()) {
+            throw new FonteIndisponivelException("Sensor de " + getTipo() + " não está funcionando.");
         }
 
         //Valor entre -5 a 55 (O negativo é para testar a validação)
