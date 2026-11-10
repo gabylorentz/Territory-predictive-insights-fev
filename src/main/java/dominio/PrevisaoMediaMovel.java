@@ -2,6 +2,8 @@ package dominio;
 
 import java.util.List;
 
+import excecao.DadosInvalidosException;
+
 public class PrevisaoMediaMovel extends EstrategiaPrevisao {
 
     private final int leitura;
@@ -12,10 +14,11 @@ public class PrevisaoMediaMovel extends EstrategiaPrevisao {
     }
 
     @Override
-    protected double calcular(List<Medicao> historico) {
+    public double prever(List<Medicao> historico) throws DadosInvalidosException {
+        super.prever(historico);   // valida o mínimo de leituras (lança exceção se faltar)
         List<Medicao> ultimas = historico.subList(historico.size() - leitura, historico.size());
-        return media(ultimas);
-    }
+        return arredondar(media(ultimas));
+        }
 
     @Override
     public String explicar(double valorPrevisto, String unidade) {

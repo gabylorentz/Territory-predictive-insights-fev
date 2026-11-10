@@ -13,17 +13,18 @@ public abstract class EstrategiaPrevisao {
         this.minimoLeituras = minimoLeituras;
     }
 
-    public double prever (List<Medicao> historico) throws DadosInvalidosException {
-       int quantidade = (historico == null) ? 0 : historico.size();
-       if (quantidade < minimoLeituras) {
-           throw new DadosInvalidosException(" Histórico insuficiente para " + nome + ": " + quantidade + " leitura(s), mínimo de " + minimoLeituras);
-       }
-       double valor = calcular(historico);
-         return Math.round(valor * 10) / 10.0; // arredondar para 1 casa decimal
+    public double prever(List<Medicao> historico) throws DadosInvalidosException {
+    int quantidade = (historico == null) ? 0 : historico.size();
+    if (quantidade < minimoLeituras) {
+        throw new DadosInvalidosException("Histórico insuficiente para " + nome + ": "
+                + quantidade + " leitura(s), mínimo de " + minimoLeituras + ".");
     }
+    return arredondar(media(historico));   
+}
 
-    protected abstract double calcular(List<Medicao> historico);
-    
+protected double arredondar(double valor) {
+    return Math.round(valor * 10) / 10.0;
+}
     public abstract String explicar(double valorPrevisto, String unidade);
 
     protected double media(List<Medicao> medicoes) {
