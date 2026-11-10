@@ -4,6 +4,9 @@ import excecao.FonteIndisponivelException;
 import java.util.List;
 import persistencia.ConexaoBanco;
 import persistencia.MedicaoDAO;
+import servico.ConfiguracaoSistema;
+import servico.FabricaPrevisao;
+
 import java.sql.SQLException;
 
 public class SistemaMonitoramento {
@@ -49,10 +52,9 @@ public class SistemaMonitoramento {
         }
                 // ===== ETAPA 5: previsões =====
         System.out.println("--- Previsões para Chuva ---");
-        List<EstrategiaPrevisao> estrategias = List.of(
-                new PrevisaoMediaMovel(5),
-                new PrevisaoComparacao(3)
-        );
+        FabricaPrevisao fabrica = new FabricaPrevisao();
+        List<EstrategiaPrevisao> estrategias = fabrica.criarTodas();
+    
 
         try {
             List<Medicao> historico = medicaoDAO.listarPorSensor("Chuva");
@@ -69,5 +71,18 @@ public class SistemaMonitoramento {
         } catch (SQLException | DadosInvalidosException e) {
 
             System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());}
+                        // ===== ETAPA 6: Singleton e Factory =====
+            System.out.println("--- Teste do Singleton ---");
+            try {
+                ConfiguracaoSistema.getInstancia().getDadosTerritorio().setLimiar("Chuva", 40.0);
+                double limiar = ConfiguracaoSistema.getInstancia().getDadosTerritorio().getLimiar("Chuva");
+                System.out.println("Limiar de chuva visto por outra chamada: " + limiar);
+                System.out.println("Mesma instância? "
+                        + (ConfiguracaoSistema.getInstancia() == ConfiguracaoSistema.getInstancia()));
+
+                fabrica.criar("tendencia");
+            } catch (DadosInvalidosException e) {
+                System.out.println("[AVISO] " + e.getMessage());
+            }
             }
         }
