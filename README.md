@@ -57,7 +57,7 @@ Todo alerta explica o motivo, por exemplo: `[ALERTA] Chuva: previsto 36.4 mm/h, 
 Você precisa de **Java 17 ou superior** e do **Maven**. Na raiz do projeto:
 
 ```bash
-mvn clean test           # compila e roda os 24 testes
+mvn clean test           # compila e roda os 29 testes
 mvn compile exec:java    # abre o menu
 ```
 
@@ -87,7 +87,7 @@ Se alguém digitar uma letra, deixar em branco ou escolher uma opção que não 
 
 ## Testes
 
-São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns pontos:
+São **29 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns pontos:
 
 - Usamos `assertThrows` para provar que dados ruins são recusados (medição negativa, NaN, limiar inválido, histórico curto demais).
 - O `ServicoMonitoramentoTest` usa **Mockito**: em vez de usar o banco de verdade, o teste entrega "dublês" dos DAOs. Assim dá para testar só a lógica do alerta, sem depender de banco nem de digitação.
@@ -166,6 +166,6 @@ Dividimos o projeto em duas partes: a base do sistema e a parte de alertas, menu
 - Padrões criacionais: `ConfiguracaoSistema` (Singleton) e `FabricaPrevisao` (Factory).
 - Alertas: `NivelAlerta`, `Alerta`, `AlertaDAO` e `ServicoMonitoramento`.
 - `MenuConsole`, o menu interativo com `Scanner`.
-- Os 24 testes: JUnit no padrão AAA, `assertThrows` e Mockito.
+- Os 29 testes: JUnit no padrão AAA, `assertThrows` e Mockito.
 - README e configuração para rodar com `mvn compile exec:java`.
 

@@ -28,8 +28,8 @@ public class MedicaoDAO {
     }
 
    public List<Medicao> listarPorSensor(String tipoSensor) throws SQLException, DadosInvalidosException {
-    String sql = "SELECT id, tipo_Sensor, valor, unidade, data_Hora FROM medicao "
-               + "WHERE tipo_Sensor = ? ORDER BY data_Hora";
+    String sql = """
+    SELECT id, tipo_Sensor, valor, unidade, data_Hora FROM medicao WHERE tipo_Sensor = ? ORDER BY data_Hora""";
     List<Medicao> lista = new ArrayList<>();
 
    

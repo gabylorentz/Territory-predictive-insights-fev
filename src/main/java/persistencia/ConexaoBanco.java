@@ -19,12 +19,12 @@ public class ConexaoBanco {
 
     public static void criarTabelas() throws SQLException {
 
-        String sql = """ 
+        String sqlMedicao = """ 
                     CREATE TABLE IF NOT EXISTS Medicao (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
                     tipo_Sensor VARCHAR(255) NOT NULL, 
                     valor DOUBLE NOT NULL,
-                    unidade VARCHAR(50) NOT NULL,
+                    unidade VARCHAR(10) NOT NULL,
                     data_Hora TIMESTAMP NOT NULL)""";
 
         String sqlAlerta = """
@@ -40,7 +40,7 @@ public class ConexaoBanco {
         """;
             
             try (Connection conn = getConexao(); Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            stmt.execute(sqlMedicao);
             stmt.execute(sqlAlerta);
         }
 
