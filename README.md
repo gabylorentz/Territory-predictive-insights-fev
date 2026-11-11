@@ -97,7 +97,7 @@ São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns
 
 ## Decisões que tomamos (e por quê)
 
-**JDBC em vez de Spring/JPA.** Preferimos o caminho em que o SQL fica à vista, porque assim conseguimos explicar o que acontece em cada linha. Todo SQL usa `PreparedStatement` com `?`, nunca texto concatenado, e as conexões são fechadas com try-with-resources.
+**JDBC em vez de Spring/JPA.** Todo SQL com valores usa `PreparedStatement` com `?`, nunca texto concatenado. Só o `CREATE TABLE` usa `Statement`, porque não tem nenhum parâmetro. As conexões são fechadas com try-with-resources.
 
 **H2 em arquivo, e não em memória.** Prever sem histórico é chute, e o histórico precisa sobreviver ao reinício. Em memória, tudo sumiria ao fechar o programa.
 
