@@ -137,7 +137,16 @@ São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns
 
 ## Uso de IA
 
-Usamos o **Microsoft Copilot** como tutor ao longo do projeto: para entender conceitos que eram novos para a gente, para interpretar mensagens de erro e para ver exemplos de estrutura antes de escrever o nosso código. Para não aceitar nada no automático, revisamos tudo na prática: rodamos o programa, calculamos na mão os valores esperados dos testes, quebramos o código de propósito para ver os testes falharem e conferimos cada parte com o enunciado.
+## Uso de IA
+
+Usamos o **Microsoft Copilot** como tutor ao longo de todo o projeto: para entender conceitos novos (JDBC, DAO, Singleton, Factory, Mockito), interpretar mensagens de erro e ver exemplos de estrutura antes de escrever o nosso código.
+
+**Onde a IA ajudou mais:** em algumas classes ela sugeriu a estrutura ou o código completo, que adaptamos às aulas de POO, executamos e testamos. Foi o caso de `ConexaoBanco`, `MedicaoDAO`, `EstrategiaPrevisao` e suas filhas, `ConfiguracaoSistema`, `ServicoMonitoramento`, `MenuConsole` e dos arquivos de teste.
+
+**O que escrevemos nós:** nas demais classes (por exemplo `Medicao`, `AreaDeRisco`, `DadosTerritorio`, `FabricaPrevisao`, `NivelAlerta`, `Alerta` e `AlertaDAO`), partimos de esqueletos com pistas e completamos os trechos sozinhas, aplicando o conteúdo das aulas de POO.
+
+**Como revisamos:** rodamos o programa, calculamos na mão os valores esperados dos testes, quebramos o código de propósito para ver o teste falhar e comparamos cada parte com o enunciado. Os testes chegaram a pegar dois erros reais de lógica no `setLimiar` antes da entrega.
+
   
 ---
 
