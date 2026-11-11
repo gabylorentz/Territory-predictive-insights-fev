@@ -6,23 +6,23 @@ import excecao.DadosInvalidosException;
 
 public class PrevisaoMediaMovel extends EstrategiaPrevisao {
 
-    private final int leitura;
+    private final int janela;
 
-    public PrevisaoMediaMovel(int leitura) {
-        super("Média móvel", leitura);
-        this.leitura = leitura;
+    public PrevisaoMediaMovel(int janela) {
+        super("Média móvel", janela);
+        this.janela = janela;
     }
 
     @Override
     public double prever(List<Medicao> historico) throws DadosInvalidosException {
         super.prever(historico);   // valida o mínimo de leituras (lança exceção se faltar)
-        List<Medicao> ultimas = historico.subList(historico.size() - leitura, historico.size());
+        List<Medicao> ultimas = historico.subList(historico.size() - janela, historico.size());
         return arredondar(media(ultimas));
         }
 
     @Override
     public String explicar(double valorPrevisto, String unidade) {
-        return "Média das últimas " + leitura + " leituras: espera-se cerca de "
+        return "Média das últimas " + janela + " leituras: espera-se cerca de "
                 + valorPrevisto + " " + unidade + " na próxima medição.";
     }
 }

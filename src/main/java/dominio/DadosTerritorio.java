@@ -28,7 +28,7 @@ public class DadosTerritorio {
             throw new DadosInvalidosException("Sensor sem limiar cadastrado: " + tipoSensor);
         }
         if (valor <= 0 || Double.isNaN(valor)) {
-            throw new DadosInvalidosException("Valor do limiar inválido: " + tipoSensor + " : " + valor);
+            throw new DadosInvalidosException("Valor do limiar inválido: " + tipoSensor + ": " + valor);
         }
         limiares.put(tipoSensor, valor);
     }

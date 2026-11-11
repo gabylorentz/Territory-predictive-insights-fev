@@ -32,7 +32,7 @@ public class SensorUmidadeSolo implements Sensor {
             throw new FonteIndisponivelException("Sensor de " + getTipo() + " não está funcionando.");
         }
 
-        //Valor entre -105 a 5 (O negativo é para testar a validação)
+        //Valor entre -5 a 100 (O negativo é para testar a validação)
         double valor = random.nextDouble() * 105 - 5;
         valor = Math.round(valor * 10.0) / 10.0;
 
