@@ -26,9 +26,22 @@ public class ConexaoBanco {
                     valor DOUBLE NOT NULL,
                     unidade VARCHAR(50) NOT NULL,
                     data_Hora TIMESTAMP NOT NULL)""";
+
+        String sqlAlerta = """
+        CREATE TABLE IF NOT EXISTS alerta (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            tipo_sensor VARCHAR(50) NOT NULL,
+            unidade VARCHAR(10) NOT NULL,
+            nivel VARCHAR(10) NOT NULL,
+            valor_previsto DOUBLE NOT NULL,
+            limiar DOUBLE NOT NULL,
+            data_hora TIMESTAMP NOT NULL
+        )
+        """;
             
             try (Connection conn = getConexao(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            stmt.execute(sqlAlerta);
         }
 
     }

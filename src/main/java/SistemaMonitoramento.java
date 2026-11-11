@@ -1,19 +1,22 @@
 import dominio.*;
 import excecao.DadosInvalidosException;
 import excecao.FonteIndisponivelException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
+import persistencia.AlertaDAO;
 import persistencia.ConexaoBanco;
 import persistencia.MedicaoDAO;
 import servico.ConfiguracaoSistema;
 import servico.FabricaPrevisao;
-
-import java.sql.SQLException;
+import servico.ServicoMonitoramento;
 
 public class SistemaMonitoramento {
     public static void main(String[] args) {
 
-        // ===== ETAPA 4: leitura + gravação no banco =====
+        // ===== ETAPA 4: banco + leitura + gravação =====
         MedicaoDAO medicaoDAO = new MedicaoDAO();
+        AlertaDAO alertaDAO = new AlertaDAO();
 
         try {
             ConexaoBanco.criarTabelas();
@@ -25,7 +28,8 @@ public class SistemaMonitoramento {
         List<Sensor> sensores = List.of(
                 new SensorChuva(),
                 new SensorNivelCorrego(),
-                new SensorUmidadeSolo());
+                new SensorUmidadeSolo()
+        );
 
         System.out.println("--- Leitura dos sensores ---");
         for (Sensor sensor : sensores) {
@@ -50,12 +54,12 @@ public class SistemaMonitoramento {
         } catch (SQLException | DadosInvalidosException e) {
             System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());
         }
-                // ===== ETAPA 5: previsões =====
-        System.out.println("--- Previsões para Chuva ---");
+
+        // ===== ETAPA 5 e 6: previsões (estratégias vêm da fábrica) =====
         FabricaPrevisao fabrica = new FabricaPrevisao();
         List<EstrategiaPrevisao> estrategias = fabrica.criarTodas();
-    
 
+        System.out.println("--- Previsões para Chuva ---");
         try {
             List<Medicao> historico = medicaoDAO.listarPorSensor("Chuva");
             System.out.println("Leituras no histórico: " + historico.size());
@@ -63,26 +67,49 @@ public class SistemaMonitoramento {
             for (EstrategiaPrevisao estrategia : estrategias) {
                 try {
                     double previsto = estrategia.prever(historico);
-                    System.out.println("[" + estrategia.getNome() + "] " + estrategia.explicar(previsto, "mm/h"));
+                    System.out.println("[" + estrategia.getNome() + "] "
+                            + estrategia.explicar(previsto, "mm/h"));
                 } catch (DadosInvalidosException e) {
                     System.out.println("[SILÊNCIO] " + e.getMessage());
                 }
             }
         } catch (SQLException | DadosInvalidosException e) {
+            System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());
+        }
 
-            System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());}
-                        // ===== ETAPA 6: Singleton e Factory =====
-            System.out.println("--- Teste do Singleton ---");
-            try {
-                ConfiguracaoSistema.getInstancia().getDadosTerritorio().setLimiar("Chuva", 40.0);
-                double limiar = ConfiguracaoSistema.getInstancia().getDadosTerritorio().getLimiar("Chuva");
-                System.out.println("Limiar de chuva visto por outra chamada: " + limiar);
-                System.out.println("Mesma instância? "
-                        + (ConfiguracaoSistema.getInstancia() == ConfiguracaoSistema.getInstancia()));
+        // ===== ETAPA 7: alertas =====
+        System.out.println("--- Alertas ---");
+        ServicoMonitoramento servico = new ServicoMonitoramento(medicaoDAO, alertaDAO,
+                ConfiguracaoSistema.getInstancia().getDadosTerritorio());
 
-                fabrica.criar("tendencia");
-            } catch (DadosInvalidosException e) {
-                System.out.println("[AVISO] " + e.getMessage());
-            }
+
+        for (Sensor sensor : sensores) {
+            for (EstrategiaPrevisao estrategia : estrategias) {
+                try {
+                    Optional<Alerta> alerta = servico.avaliar(
+                            sensor.getTipo(), sensor.getUnidade(), estrategia);
+
+                    if (alerta.isPresent()) {
+                        System.out.println(alerta.get().getMensagem());
+                    } else {
+                        System.out.println("[NORMAL] " + sensor.getTipo()
+                                + " (" + estrategia.getNome() + ")");
+                    }
+                } catch (DadosInvalidosException e) {
+                    System.out.println("[SILÊNCIO] " + e.getMessage());
+                } catch (SQLException e) {
+                    System.out.println("[FALHA] Erro no banco: " + e.getMessage());
+                }
             }
         }
+
+        System.out.println("--- Alertas já emitidos ---");
+        try {
+            for (Alerta a : alertaDAO.listarTodos()) {
+                System.out.println(a.getMensagem());
+            }
+        } catch (SQLException | DadosInvalidosException e) {
+            System.out.println("[FALHA] Erro ao listar alertas: " + e.getMessage());
+        }
+    }
+}
