@@ -114,43 +114,59 @@ public class MenuConsole {
         }
     }
 
-    private void rodarPrevisoes() {
-        System.out.println("--- Previsões e alertas ---");
-        List<EstrategiaPrevisao> estrategias = fabrica.criarTodas();
+   private void rodarPrevisoes() {
+    System.out.println("--- Previsões e alertas ---");
+    List<EstrategiaPrevisao> estrategias = fabrica.criarTodas();
 
-        for (Sensor sensor : sensores) {
-            System.out.println(">> " + sensor.getTipo());
+    NivelAlerta maisGrave = NivelAlerta.NORMAL;
+    boolean houveAvaliacao = false;
 
-            List<Medicao> historico;
+    for (Sensor sensor : sensores) {
+        System.out.println(">> " + sensor.getTipo());
+
+        List<Medicao> historico;
+        try {
+            historico = medicaoDAO.listarPorSensor(sensor.getTipo());
+        } catch (SQLException | DadosInvalidosException e) {
+            System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());
+            continue;
+        }
+
+        for (EstrategiaPrevisao estrategia : estrategias) {
             try {
-                historico = medicaoDAO.listarPorSensor(sensor.getTipo());
-            } catch (SQLException | DadosInvalidosException e) {
-                System.out.println("[FALHA] Erro ao ler histórico: " + e.getMessage());
-                continue;
-            }
+                double previsto = estrategia.prever(historico);
+                System.out.println("[" + estrategia.getNome() + "] "
+                        + estrategia.explicar(previsto, sensor.getUnidade()));
 
-            for (EstrategiaPrevisao estrategia : estrategias) {
-                try {
-                    double previsto = estrategia.prever(historico);
-                    System.out.println("[" + estrategia.getNome() + "] "
-                            + estrategia.explicar(previsto, sensor.getUnidade()));
+                Optional<Alerta> alerta = servico.avaliar(
+                        sensor.getTipo(), sensor.getUnidade(), estrategia);
+                houveAvaliacao = true;
 
-                    Optional<Alerta> alerta = servico.avaliar(
-                            sensor.getTipo(), sensor.getUnidade(), estrategia);
-                    if (alerta.isPresent()) {
-                        area.setStatus(alerta.get().getNivel().getRotulo());
-                        System.out.println("   " + alerta.get().getMensagem());
-                    } else {
-                        System.out.println("   [NORMAL] Abaixo de 80% do limiar.");
+                if (alerta.isPresent()) {
+                    System.out.println("   " + alerta.get().getMensagem());
+                    if (alerta.get().getNivel().ordinal() > maisGrave.ordinal()) {
+                        maisGrave = alerta.get().getNivel();
                     }
-                } catch (DadosInvalidosException e) {
-                    System.out.println("[SILÊNCIO] " + e.getMessage());
-                } catch (SQLException e) {
-                    System.out.println("[FALHA] Erro no banco: " + e.getMessage());
+                } else {
+                    System.out.println("   [NORMAL] Abaixo de 80% do limiar.");
                 }
+            } catch (DadosInvalidosException e) {
+                System.out.println("[SILÊNCIO] " + e.getMessage());
+            } catch (SQLException e) {
+                System.out.println("[FALHA] Erro no banco: " + e.getMessage());
             }
         }
     }
+
+    if (houveAvaliacao) {
+        try {
+            area.setStatus(maisGrave.getRotulo());
+            System.out.println("Status da área: " + area.getStatus());
+        } catch (DadosInvalidosException e) {
+            System.out.println("[AVISO] Não foi possível atualizar o status: " + e.getMessage());
+        }
+    }
+}
 
     private void verHistorico() {
         System.out.println("1) Medições de um sensor");
@@ -196,7 +212,7 @@ public class MenuConsole {
 
         try {
             switch (opcao) {
-                case -1 -> {
+                case 1 -> {
                     for (Sensor sensor : sensores) {
                         System.out.println(sensor.getTipo() + ": "
                                 + dadosTerritorio.getLimiar(sensor.getTipo())

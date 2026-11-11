@@ -131,7 +131,7 @@ São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns
 
 - Os limites e a população alterados pelo menu ficam só na memória e voltam ao padrão quando o programa reinicia. As intruções pede persistência apenas para medições e alertas, mas seguimos já para um próximo passo.
 - Cada vez que a opção 2 roda, ela grava um alerta novo, mesmo que a situação seja a mesma da execução anterior. O histórico pode ter alertas parecidos em sequência.
-- O status da área de risco ainda não é atualizado automaticamente pelos alertas.
+- O status da área de risco reflete o nível mais grave da última rodada de previsões (opção 2) e fica só em memória, voltando a NORMAL quando o programa reinicia. Se todas as estratégias ficam em silêncio por falta de leituras, o status não é alterado.
 
 ---
 
