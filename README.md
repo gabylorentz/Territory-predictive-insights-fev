@@ -138,6 +138,7 @@ São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns
 ## Uso de IA
 
 Usamos o **Microsoft Copilot** como tutor ao longo do projeto: para entender conceitos que eram novos para a gente, para interpretar mensagens de erro e para ver exemplos de estrutura antes de escrever o nosso código. Para não aceitar nada no automático, revisamos tudo na prática: rodamos o programa, calculamos na mão os valores esperados dos testes, quebramos o código de propósito para ver os testes falharem e conferimos cada parte com o enunciado.
+  
 ---
 
 ## Divisão de tarefas
