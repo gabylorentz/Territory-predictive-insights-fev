@@ -65,7 +65,7 @@ mvn compile exec:java    # abre o menu
 
 Não precisa instalar nem configurar nada. Usamos o **H2 em modo arquivo** (`jdbc:h2:./dados/monitoramento`): as tabelas `medicao` e `alerta` são criadas sozinhas na primeira execução e a pasta `dados/` aparece sozinha. Como os dados ficam em arquivo, **eles continuam lá quando o programa é fechado e aberto de novo**.
 
-Um aviso importante para quem vai testar: na primeira vez o histórico está vazio, então as previsões ficam em silêncio (vamos explicar o porquê na reflexão crítica). **Use a opção 1 do menu pelo menos 6 vezes** para juntar leituras: a média móvel precisa de 5 e a comparação precisa de 6. Lembre que a leitura é sorteada, então às vezes um sensor falha ou devolve um valor inválido de propósito, e isso é esperado.
+Um aviso importante para quem vai testar: na primeira vez o histórico está vazio, então as previsões ficam em silêncio (vamos explicar o porquê na reflexão crítica). **Use a opção 1 do menu pelo menos 10 vezes**. A leitura é sorteada: às vezes o sensor falha ou devolve um valor negativo, que é descartado, para juntar leituras: a média móvel precisa de 5 e a comparação precisa de 6. Lembre que a leitura é sorteada, então às vezes um sensor falha ou devolve um valor inválido de propósito, e isso é esperado.
 
 ### IMPORTANTE:
 Se os acentos aparecerem como `?` no terminal do Windows, rode `chcp 65001` antes. É só exibição, o sistema funciona igual.
@@ -129,13 +129,12 @@ São **24 testes** com JUnit 5, escritos no padrão Arrange, Act, Assert. Alguns
 
 ## Limitações que a gente conhece
 
-- Os limites e a população alterados pelo menu ficam só na memória e voltam ao padrão quando o programa reinicia. As intruções pede persistência apenas para medições e alertas, mas seguimos já para um próximo passo.
+- Os limites e a população alterados pelo menu ficam só na memória e voltam ao padrão quando o programa reinicia. As instruções pedem persistência apenas para medições e alertas. Persistir também a configuração fica como próximo passo.
 - Cada vez que a opção 2 roda, ela grava um alerta novo, mesmo que a situação seja a mesma da execução anterior. O histórico pode ter alertas parecidos em sequência.
 - O status da área de risco reflete o nível mais grave da última rodada de previsões (opção 2) e fica só em memória, voltando a NORMAL quando o programa reinicia. Se todas as estratégias ficam em silêncio por falta de leituras, o status não é alterado.
 
 ---
 
-## Uso de IA
 
 ## Uso de IA
 

@@ -32,6 +32,9 @@ public class Alerta {
         if (Double.isNaN(limiar) || limiar <= 0) {
             throw new DadosInvalidosException("Limiar inválido para " + tipoSensor + ": " + limiar);
         }
+        if (dataHora == null) {
+            throw new DadosInvalidosException("Data e hora do alerta de " + tipoSensor + " não informadas.");
+}
 
         this.id = id;
         this.tipoSensor = tipoSensor;
